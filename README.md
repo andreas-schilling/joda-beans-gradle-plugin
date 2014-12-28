@@ -41,9 +41,9 @@ First, declare a dependency to the plugin:
 ```
   dependencies {
       ...
-    	classpath group: 'org.joda', name: 'joda-beans', version: '1.2'
+      classpath group: 'org.joda', name: 'joda-beans', version: '1.2'
       classpath group: 'org.joda', name: 'joda-beans-plugin', version: '1.0.0'
-    }
+  }
 ```
 
 
@@ -56,10 +56,10 @@ If you do need to configure the plugin, your properties might look like this:
 
 ```
   jodabeans {
-	  sourceDir = file('src/main/java').getAbsolutePath() // the only necessary property
-	  indent = 4 // this is the default
-	  verbose = 2
-	  prefix = "_"
-	  recursive = true // this is the default
-}
+      sourceDir = file('src/main/java').getAbsolutePath() // the only necessary property
+      indent = 4 // this is the default
+      verbose = 2
+      prefix = "_"
+      recursive = true // this is the default
+  }
 ```
