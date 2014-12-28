@@ -2,22 +2,16 @@ package org.joda.beans.gradle.tasks;
 
 import java.util.List;
 
-import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.TaskAction;
 
 import com.google.common.base.Strings;
 
-public class Validate extends AbstractJodaBeansTask {
-	public static final String ID = "validate";
-
-	public Validate() {
-		super();
-		getOutputs().upToDateWhen(Specs.satisfyNone());
-	}
+public class Generate extends AbstractJodaBeansTask {
+	public static final String ID = "jodaGenerate";
 
 	@TaskAction
-	public void validate() {
-		System.out.println("Joda-Bean validator started, directory: "
+	public void jodaGenerateTask() {
+		System.out.println("Joda-Bean generator started, directory: "
 				+ getSourceDir()
 				+ (Strings.isNullOrEmpty(getTestSourceDir()) ? ""
 						: ", test directory:" + getTestSourceDir())
@@ -33,15 +27,11 @@ public class Validate extends AbstractJodaBeansTask {
 			return;
 		}
 		List<String> argsList = buildArgs();
-		System.out.println("Running Joda-Bean validator using arguments "
+		System.out.println("Running Joda-Bean generator using arguments "
 				+ argsList);
 		runTool(toolClass, argsList);
+
+		System.out.println("Joda-Bean generator completed");
 	}
 
-	@Override
-	protected List<String> buildArgs() {
-		List<String> argsList = super.buildArgs();
-		argsList.add("-nowrite");
-		return argsList;
-	}
 }

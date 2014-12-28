@@ -11,7 +11,7 @@ public class JodaBeansExtension {
 
 	private String prefix;
 
-	private String verbose;
+	private Integer verbose;
 
 	private String indent;
 
@@ -47,11 +47,11 @@ public class JodaBeansExtension {
 		this.prefix = prefix;
 	}
 
-	public String getVerbose() {
+	public Integer getVerbose() {
 		return verbose;
 	}
 
-	public void setVerbose(String verbose) {
+	public void setVerbose(Integer verbose) {
 		this.verbose = verbose;
 	}
 

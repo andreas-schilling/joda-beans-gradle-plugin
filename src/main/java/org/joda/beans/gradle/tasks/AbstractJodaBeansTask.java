@@ -36,7 +36,7 @@ public class AbstractJodaBeansTask extends DefaultTask {
 		return prefix != null ? prefix : "";
 	}
 
-	protected String getVerbose() {
+	protected Integer getVerbose() {
 		return ((JodaBeansExtension) getProject().getExtensions().getByName(
 				JodaBeansExtension.ID)).getVerbose();
 	}
@@ -61,7 +61,7 @@ public class AbstractJodaBeansTask extends DefaultTask {
 			argsList.add("-prefix=" + getPrefix());
 		}
 		if (getVerbose() != null) {
-			argsList.add("-verbose=" + getVerbose());
+			argsList.add("-v=" + getVerbose());
 		}
 		return argsList;
 	}
