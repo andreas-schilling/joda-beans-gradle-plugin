@@ -4,18 +4,11 @@ import java.util.List;
 
 import org.gradle.api.tasks.TaskAction;
 
-import com.google.common.base.Strings;
-
 public class GenerateTask extends AbstractJodaBeansTask {
 	public String sourceDir;
 
 	@TaskAction
 	public void validateTask() {
-		System.out.println("Joda-Bean validator started, directory: "
-				+ getSourceDir()
-				+ (Strings.isNullOrEmpty(getTestSourceDir()) ? ""
-						: ", test directory:" + getTestSourceDir()));
-
 		ClassLoader classLoader = obtainClassLoader();
 		Class<?> toolClass = null;
 		try {

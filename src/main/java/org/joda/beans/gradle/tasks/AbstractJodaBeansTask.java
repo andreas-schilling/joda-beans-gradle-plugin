@@ -6,33 +6,44 @@ import java.util.List;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
+import org.joda.beans.gradle.JodaBeansExtension;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 public class AbstractJodaBeansTask extends DefaultTask {
-	public String sourceDir;
+	private static final String DEFAULT_INDENT = "4";
 
 	protected String getSourceDir() {
-		return hasProperty("testSourceDir") ? (String) property("testSourceDir")
-				: getProject().getBuildDir().toString();
+		return ((JodaBeansExtension) getProject().getExtensions().getByName(
+				JodaBeansExtension.ID)).getSourceDir();
 	}
 
 	protected String getTestSourceDir() {
-		return hasProperty("testSourceDir") ? (String) property("testSourceDir")
-				: null;
+		return ((JodaBeansExtension) getProject().getExtensions().getByName(
+				JodaBeansExtension.ID)).getTestSourceDir();
 	}
 
 	protected String getIndent() {
-		return hasProperty("indent") ? (String) property("indent") : null;
+		String indent = ((JodaBeansExtension) getProject().getExtensions()
+				.getByName(JodaBeansExtension.ID)).getIndent();
+		return indent != null ? indent : DEFAULT_INDENT;
 	}
 
 	protected String getPrefix() {
-		return hasProperty("prefix") ? (String) property("prefix") : null;
+		String prefix = ((JodaBeansExtension) getProject().getExtensions()
+				.getByName(JodaBeansExtension.ID)).getPrefix();
+		return prefix != null ? prefix : "";
 	}
 
 	protected String getVerbose() {
-		return hasProperty("verbose") ? (String) property("verbose") : null;
+		return ((JodaBeansExtension) getProject().getExtensions().getByName(
+				JodaBeansExtension.ID)).getVerbose();
+	}
+
+	protected String getTargetDir() {
+		return ((JodaBeansExtension) getProject().getExtensions().getByName(
+				JodaBeansExtension.ID)).getTargetDir();
 	}
 
 	/**

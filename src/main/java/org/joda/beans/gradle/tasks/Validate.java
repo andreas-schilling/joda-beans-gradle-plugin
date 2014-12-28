@@ -2,19 +2,25 @@ package org.joda.beans.gradle.tasks;
 
 import java.util.List;
 
+import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.TaskAction;
 
 import com.google.common.base.Strings;
 
-public class ValidateTask extends AbstractJodaBeansTask {
-	public String sourceDir;
+public class Validate extends AbstractJodaBeansTask {
+
+	public Validate() {
+		super();
+		getOutputs().upToDateWhen(Specs.satisfyAll());
+	}
 
 	@TaskAction
-	public void validateTask() {
+	public void validate() {
 		System.out.println("Joda-Bean validator started, directory: "
 				+ getSourceDir()
 				+ (Strings.isNullOrEmpty(getTestSourceDir()) ? ""
-						: ", test directory:" + getTestSourceDir()));
+						: ", test directory:" + getTestSourceDir())
+				+ ", target directory:" + getTargetDir());
 
 		ClassLoader classLoader = obtainClassLoader();
 		Class<?> toolClass = null;
@@ -26,9 +32,8 @@ public class ValidateTask extends AbstractJodaBeansTask {
 			return;
 		}
 		List<String> argsList = buildArgs();
+		System.out.println("Running Joda-Bean validator using arguments "
+				+ argsList);
 		runTool(toolClass, argsList);
-
-		System.out.println("Joda-Bean validator completed");
 	}
-
 }
