@@ -11,8 +11,18 @@ import org.joda.beans.gradle.JodaBeansExtension;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
-public class AbstractJodaBeansTask extends DefaultTask {
+/**
+ * Abstract base class for both {@code validate} and {@code generate} tasks.
+ * 
+ * @author Andreas Schilling
+ *
+ */
+public abstract class AbstractJodaBeansTask extends DefaultTask {
+	private static final String JODA_BEANS_CODE_GEN_CLASS = "org.joda.beans.gen.BeanCodeGen";
+
 	private static final String DEFAULT_INDENT = "4";
+
+	private static final String DEFAULT_STRING_VALUE = "";
 
 	protected String getSourceDir() {
 		return ((JodaBeansExtension) getProject().getExtensions().getByName(
@@ -33,7 +43,7 @@ public class AbstractJodaBeansTask extends DefaultTask {
 	protected String getPrefix() {
 		String prefix = ((JodaBeansExtension) getProject().getExtensions()
 				.getByName(JodaBeansExtension.ID)).getPrefix();
-		return prefix != null ? prefix : "";
+		return prefix != null ? prefix : DEFAULT_STRING_VALUE;
 	}
 
 	protected Integer getVerbose() {
@@ -41,9 +51,37 @@ public class AbstractJodaBeansTask extends DefaultTask {
 				JodaBeansExtension.ID)).getVerbose();
 	}
 
-	protected String getTargetDir() {
-		return ((JodaBeansExtension) getProject().getExtensions().getByName(
-				JodaBeansExtension.ID)).getTargetDir();
+	protected boolean operateRecursive() {
+		Boolean recursive = ((JodaBeansExtension) getProject().getExtensions()
+				.getByName(JodaBeansExtension.ID)).getRecursive();
+		return recursive != null ? recursive : true;
+	}
+
+	protected abstract String getExecutionType();
+
+	protected void runBeanGenerator() {
+		getLogger().debug(
+				"Running JodaBeans "
+						+ getExecutionType()
+						+ " in directory: "
+						+ getSourceDir()
+						+ (Strings.isNullOrEmpty(getTestSourceDir()) ? ""
+								: ", test directory:" + getTestSourceDir()));
+
+		ClassLoader classLoader = obtainClassLoader();
+		Class<?> toolClass = null;
+		try {
+			toolClass = classLoader.loadClass(JODA_BEANS_CODE_GEN_CLASS);
+		} catch (Exception ex) {
+			getLogger()
+					.error("Skipping as joda-beans is not in the project compile classpath");
+			return;
+		}
+		List<String> arguments = buildGeneratorArguments();
+		getLogger().debug("Using arguments " + arguments);
+		runTool(toolClass, arguments);
+		getLogger().debug(
+				"JodaBeans " + getExecutionType() + " successfully completed.");
 	}
 
 	/**
@@ -51,19 +89,21 @@ public class AbstractJodaBeansTask extends DefaultTask {
 	 * 
 	 * @return the arguments, not null
 	 */
-	protected List<String> buildArgs() {
-		List<String> argsList = Lists.newArrayList();
-		argsList.add("-R");
+	protected List<String> buildGeneratorArguments() {
+		List<String> arguments = Lists.newArrayList();
+		if (operateRecursive()) {
+			arguments.add("-R");
+		}
 		if (getIndent() != null) {
-			argsList.add("-indent=" + getIndent());
+			arguments.add("-indent=" + getIndent());
 		}
 		if (getPrefix() != null) {
-			argsList.add("-prefix=" + getPrefix());
+			arguments.add("-prefix=" + getPrefix());
 		}
 		if (getVerbose() != null) {
-			argsList.add("-v=" + getVerbose());
+			arguments.add("-v=" + getVerbose());
 		}
-		return argsList;
+		return arguments;
 	}
 
 	/**
@@ -76,8 +116,11 @@ public class AbstractJodaBeansTask extends DefaultTask {
 	}
 
 	protected int runTool(Class<?> toolClass, List<String> argsList) {
-		// invoke main source
-		argsList.add(getSourceDir());
+		String sourceDir = getSourceDir();
+		if (Strings.isNullOrEmpty(sourceDir)) {
+			throw new GradleException("Source directory must be given!");
+		}
+		argsList.add(sourceDir);
 		int count = invoke(toolClass, argsList);
 		// optionally invoke test source
 		if (!Strings.isNullOrEmpty(getTestSourceDir())) {

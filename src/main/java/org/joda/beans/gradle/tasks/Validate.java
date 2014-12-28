@@ -5,10 +5,14 @@ import java.util.List;
 import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.TaskAction;
 
-import com.google.common.base.Strings;
-
+/**
+ * Runs the JodaBeans validator against the source directory.
+ * 
+ * @author Andreas Schilling
+ *
+ */
 public class Validate extends AbstractJodaBeansTask {
-	public static final String ID = "validate";
+	public static final String ID = "jodaValidate";
 
 	public Validate() {
 		super();
@@ -16,32 +20,19 @@ public class Validate extends AbstractJodaBeansTask {
 	}
 
 	@TaskAction
-	public void validate() {
-		System.out.println("Joda-Bean validator started, directory: "
-				+ getSourceDir()
-				+ (Strings.isNullOrEmpty(getTestSourceDir()) ? ""
-						: ", test directory:" + getTestSourceDir())
-				+ ", target directory:" + getTargetDir());
-
-		ClassLoader classLoader = obtainClassLoader();
-		Class<?> toolClass = null;
-		try {
-			toolClass = classLoader.loadClass("org.joda.beans.gen.BeanCodeGen");
-		} catch (Exception ex) {
-			System.out
-					.println("Skipping as joda-beans is not in the project compile classpath");
-			return;
-		}
-		List<String> argsList = buildArgs();
-		System.out.println("Running Joda-Bean validator using arguments "
-				+ argsList);
-		runTool(toolClass, argsList);
+	public void jodaValidate() {
+		runBeanGenerator();
 	}
 
 	@Override
-	protected List<String> buildArgs() {
-		List<String> argsList = super.buildArgs();
+	protected List<String> buildGeneratorArguments() {
+		List<String> argsList = super.buildGeneratorArguments();
 		argsList.add("-nowrite");
 		return argsList;
+	}
+
+	@Override
+	protected String getExecutionType() {
+		return "validator";
 	}
 }

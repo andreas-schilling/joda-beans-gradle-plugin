@@ -5,6 +5,12 @@ import org.gradle.api.Project;
 import org.joda.beans.gradle.tasks.Generate;
 import org.joda.beans.gradle.tasks.Validate;
 
+/**
+ * Main class for the plugin implementation.
+ * 
+ * @author Andreas Schilling
+ *
+ */
 public class JodaBeansPlugin implements Plugin<Project> {
 
 	@Override
@@ -14,5 +20,4 @@ public class JodaBeansPlugin implements Plugin<Project> {
 		target.getTasks().create(Validate.ID, Validate.class);
 		target.getTasks().create(Generate.ID, Generate.class);
 	}
-
 }

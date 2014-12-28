@@ -1,5 +1,11 @@
 package org.joda.beans.gradle;
 
+/**
+ * Holds all the configuration properties for the gradle plugin.
+ * 
+ * @author Andreas Schilling
+ * 
+ */
 public class JodaBeansExtension {
 	public static final String ID = "jodabeans";
 
@@ -7,21 +13,13 @@ public class JodaBeansExtension {
 
 	private String testSourceDir;
 
-	private String targetDir;
-
 	private String prefix;
 
 	private Integer verbose;
 
 	private String indent;
 
-	public String getTargetDir() {
-		return targetDir;
-	}
-
-	public void setTargetDir(String targetDir) {
-		this.targetDir = targetDir;
-	}
+	private Boolean recursive;
 
 	public String getSourceDir() {
 		return sourceDir;
@@ -61,5 +59,13 @@ public class JodaBeansExtension {
 
 	public void setIndent(String indent) {
 		this.indent = indent;
+	}
+
+	public Boolean getRecursive() {
+		return recursive;
+	}
+
+	public void setRecursive(Boolean recursive) {
+		this.recursive = recursive;
 	}
 }
