@@ -27,7 +27,7 @@ either the word "tab", or a number, such as "2" or "4". Default is "4".
 The `jodaGenerate` task is used to generate or regenerate any Joda-Beans in the project source directory.
 It can be used from the command line as `gradle jodaGenerate`.
 
-This task has the same configuration as the `jodaGenerate` task.
+This task has the same configuration as the `jodaValidate` task.
 
 ### Usage in your gradle build
 
