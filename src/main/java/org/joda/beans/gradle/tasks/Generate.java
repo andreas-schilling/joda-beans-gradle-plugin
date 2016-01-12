@@ -41,4 +41,9 @@ public class Generate extends AbstractJodaBeansTask
   {
     return "generator";
   }
+  
+  @Override
+  public String getDescription() {
+    return "Generates JodaBeans";
+  }
 }
