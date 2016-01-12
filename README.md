@@ -21,6 +21,7 @@ either the word "tab", or a number, such as "2" or "4". Default is "4".
 - `prefix` - as per the command line, the prefix used by fields. Default is "".
 - `verbose` - as per the command line, a number from "0" (quiet) to "3" (verbose).
 - `recursive` - whether the source directory should be parsed recursively. Default is "true".
+- `strict` - whether the validate task should fail if beans need regenerating. Default is "false".
 
 #### JodaGenerate
 
@@ -61,5 +62,6 @@ If you do need to configure the plugin, your properties might look like this:
       verbose = 2
       prefix = "_"
       recursive = true // this is the default
+      strict = true
   }
 ```

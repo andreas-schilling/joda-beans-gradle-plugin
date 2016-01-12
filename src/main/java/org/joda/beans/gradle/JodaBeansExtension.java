@@ -36,6 +36,8 @@ public class JodaBeansExtension
   private String indent;
 
   private Boolean recursive;
+  
+  private Boolean strict;
 
 
   public String getSourceDir()
@@ -108,4 +110,16 @@ public class JodaBeansExtension
   {
     this.recursive = recursive;
   }
+  
+  public Boolean isStrict()
+  {
+    return strict;
+  }
+
+
+  public void setStrict( final Boolean strict )
+  {
+    this.strict = strict;
+  }
+
 }

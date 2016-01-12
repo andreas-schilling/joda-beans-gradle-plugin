@@ -40,7 +40,15 @@ public abstract class AbstractJodaBeansTask extends DefaultTask
   private static final String DEFAULT_INDENT = "4";
 
   private static final String DEFAULT_STRING_VALUE = "";
-
+  
+  private static final boolean DEFAULT_STRICT_VALUE = false;
+  
+  private static final String GROUP = "JodaBeans";
+  
+  @Override
+  public final String getGroup() {
+    return GROUP;
+  }
 
   protected String getSourceDir()
   {
@@ -75,12 +83,18 @@ public abstract class AbstractJodaBeansTask extends DefaultTask
     return ((JodaBeansExtension) getProject().getExtensions().getByName( JodaBeansExtension.ID )).getVerbose();
   }
 
-
   protected boolean operateRecursive()
   {
     final Boolean recursive =
             ((JodaBeansExtension) getProject().getExtensions().getByName( JodaBeansExtension.ID )).getRecursive();
     return recursive != null ? recursive : true;
+  }
+
+  protected boolean isStrict()
+  {
+    final Boolean strict = 
+           ((JodaBeansExtension) getProject().getExtensions().getByName( JodaBeansExtension.ID )).isStrict();
+    return strict != null ? strict : DEFAULT_STRICT_VALUE;
   }
 
 
@@ -102,7 +116,6 @@ public abstract class AbstractJodaBeansTask extends DefaultTask
     catch( final Exception ex )
     {
       getLogger().error( "Skipping as joda-beans is not in the project compile classpath" );
-      return;
     }
     final List<String> arguments = buildGeneratorArguments();
     getLogger().debug( "Using arguments " + arguments );

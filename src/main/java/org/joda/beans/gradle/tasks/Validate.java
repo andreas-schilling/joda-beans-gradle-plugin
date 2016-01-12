@@ -17,6 +17,7 @@ package org.joda.beans.gradle.tasks;
 
 import java.util.List;
 
+import org.gradle.api.GradleException;
 import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.TaskAction;
 
@@ -54,10 +55,27 @@ public class Validate extends AbstractJodaBeansTask
     return argsList;
   }
 
-
+  
   @Override
   protected String getExecutionType()
   {
     return "validator";
   }
+  
+  @Override
+  public String getDescription() {
+    return "Validates JodaBeans";
+  }
+  
+  @Override
+  protected int runTool(Class<?> toolClass, List<String> argsList) {
+    //intercepts the call to runTool, failing if in strict mode and files were updated by the tool
+    int filesUpdated = super.runTool(toolClass, argsList);
+    if (isStrict() && filesUpdated != 0) {
+      throw new GradleException(filesUpdated + "  beans need regenerating. See log."); 
+    } else {
+      return filesUpdated;
+    }
+  }
+  
 }
