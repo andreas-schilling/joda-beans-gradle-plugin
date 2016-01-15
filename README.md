@@ -43,7 +43,7 @@ First, declare a dependency to the plugin:
   dependencies {
       ...
       classpath group: 'org.joda', name: 'joda-beans', version: '1.2'
-      classpath group: 'org.joda', name: 'joda-beans-plugin', version: '1.0.0'
+      classpath group: 'org.joda', name: 'joda-beans-plugin', version: '1.0.1'
   }
 ```
 
