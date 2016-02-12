@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2015 Andreas Schilling
+ * Copyright 2014-2016 Andreas Schilling
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,29 +12,32 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-package org.joda.beans.gradle;
+ */
+package org.kiirun.joda.beans.gradle.tasks;
 
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
-import org.joda.beans.gradle.tasks.Generate;
-import org.joda.beans.gradle.tasks.Validate;
-
+import org.gradle.api.tasks.TaskAction;
 
 /**
- * Main class for the plugin implementation.
+ * Runs the JodaBeans generator against the source directory.
  *
  * @author Andreas Schilling
  *
  */
-public class JodaBeansPlugin implements Plugin<Project>
-{
+public class Generate extends AbstractJodaBeansTask {
+	public static final String ID = "jodaGenerate";
 
-  @Override
-  public void apply( final Project target )
-  {
-    target.getExtensions().add( JodaBeansExtension.ID, new JodaBeansExtension() );
-    target.getTasks().create( Validate.ID, Validate.class );
-    target.getTasks().create( Generate.ID, Generate.class );
-  }
+	@TaskAction
+	public void jodaGenerateTask() {
+		runBeanGenerator();
+	}
+
+	@Override
+	protected String getExecutionType() {
+		return "generator";
+	}
+
+	@Override
+	public String getDescription() {
+		return "Generates JodaBeans";
+	}
 }

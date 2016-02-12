@@ -3,16 +3,23 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.7
 
-group = 'org.joda'
-version = '1.0.1'
+group = 'org.kiirun'
+version = '1.0.2'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Joda-Beans Gradle Plugin', 'Implementation-Version': version
+        attributes	'Implementation-Title': 'Joda-Beans Gradle Plugin',
+        			'Implementation-Version': version,
+        			'Implementation-Vendor': 'kiirun.org',
+        			'Implementation-Vendor-Id': 'org.kiirun',
+        			'Built-By': 'Andreas Schilling',
+        			'Specification-Title': 'Joda-Beans Gradle Plugin',
+        			'Specification-Vendor': 'kiirun.org',
+        			'Built-With': "gradle-${project.getGradle().getGradleVersion()}"
     }
 }
 
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 repositories {
     mavenCentral()
@@ -20,21 +27,12 @@ repositories {
 
 dependencies {
     compile gradleApi()
-    testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
-test {
-    systemProperties 'property': 'value'
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: uri('../repo'))
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
         }
     }
 }

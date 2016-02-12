@@ -34,19 +34,27 @@ This task has the same configuration as the `jodaValidate` task.
 
 This section outlines the changes required to your gradle build script.
 
-
 #### Dependency
 
-First, declare a dependency to the plugin:
+First, declare a buildscript dependency to both the plugin and Joda Beans:
 
 ```
+buildscript {
+  ...
+  
   dependencies {
       ...
-      classpath group: 'org.joda', name: 'joda-beans', version: '1.2'
-      classpath group: 'org.joda', name: 'joda-beans-plugin', version: '1.0.1'
+      classpath 'org.joda:joda-beans:1.2'
+      classpath 'org.kiirun:joda-beans-plugin:1.0.2'
   }
+}
 ```
 
+Then you can simply use the plugin with:
+
+```
+apply plugin: 'joda-beans'
+```
 
 #### Configuration
 
@@ -56,12 +64,12 @@ the defaults.
 If you do need to configure the plugin, your properties might look like this:
 
 ```
-  jodabeans {
-      sourceDir = file('src/main/java').getAbsolutePath() // the only necessary property
-      indent = 4 // this is the default
-      verbose = 2
-      prefix = "_"
-      recursive = true // this is the default
-      strict = true
-  }
+jodabeans {
+    sourceDir = file('src/main/java') // the only mandatory property
+    indent = 4 // this is the default
+    verbose = 2
+    prefix = "_"
+    recursive = true // this is the default
+    strict = true
+}
 ```
