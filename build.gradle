@@ -33,6 +33,47 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name 'Joda-Beans Gradle Plugin'
+                    description 'Gradle plugin for Joda-Beans'
+                    url 'https://github.com/andreas-schilling/joda-beans-gradle-plugin'
+                    inceptionYear '2014'
+                    issueManagement {
+                    	system 'GitHub'
+                    	url 'https://github.com/andreas-schilling/joda-beans-gradle-plugin/issues'
+                    }
+                    scm {
+                        url 'https://github.com/andreas-schilling/joda-beans-gradle-plugin'
+                        connection 'scm:git:https://github.com/andreas-schilling/joda-beans-gradle-plugin.git'
+                        developerConnection 'scm:git:git@github.com:andreas-schilling/joda-beans-gradle-plugin.git'
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'andreas-schilling'
+                            name 'Andreas Schilling'
+                            email 'andreas@kiirun.org'
+                            roles {
+                            	role 'Project Lead'
+                            }
+                            timezone 1
+                        }
+                    }
+                    organization {
+                    	name 'kiirun.org'
+                    	url 'http://www.kiirun.org'
+                    }                    
+                }
+            }
+            
         }
     }
 }
