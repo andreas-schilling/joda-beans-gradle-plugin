@@ -29,10 +29,22 @@ dependencies {
     compile gradleApi()
 }
 
+task sourceJar(type: Jar) {
+  from sourceSets.main.allJava
+  classifier "sources"
+}
+
+task javadocJar (type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+	classifier "javadoc"
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            artifact sourceJar
+            artifact javadocJar
             pom.withXml {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
@@ -72,8 +84,7 @@ publishing {
                     	url 'http://www.kiirun.org'
                     }                    
                 }
-            }
-            
+            }            
         }
     }
 }
