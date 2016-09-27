@@ -1,5 +1,10 @@
-apply plugin: 'eclipse'
-apply plugin: 'java'
+plugins {
+	id 'eclipse'
+	id 'java'
+	id 'maven'
+	id 'maven-publish'
+	id 'com.jfrog.bintray' version '1.7.1'
+}
 
 sourceCompatibility = 1.7
 
@@ -19,10 +24,9 @@ jar {
     }
 }
 
-apply plugin: 'maven-publish'
-
 repositories {
     mavenCentral()
+	jcenter()
 }
 
 dependencies {
@@ -39,12 +43,49 @@ task javadocJar (type: Jar, dependsOn: javadoc) {
 	classifier "javadoc"
 }
 
+artifacts {
+	archives jar
+	archives sourceJar
+	archives javadocJar
+}
+
+bintray {
+	user = property('bintray.user')
+	key = property('bintray.key')
+	publications = ['mavenJava']
+	dryRun = true
+	pkg {
+		repo = 'generic'
+		name = project.name
+		licenses = ['Apache-2.0']
+		vcsUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin.git'
+		issueTrackerUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin/issues'
+		publicDownloadNumbers = true
+		githubRepo = 'andreas-schilling/joda-beans-gradle-plugin'
+		githubReleaseNotesFile = 'README.md'
+		version {
+			name = version
+			desc = 'Joda-Beans Gradle Plugin'
+			released  = new Date()
+			vcsTag = version
+			gpg {
+				sign = true
+			}
+			mavenCentralSync {
+				sync = true
+				user = property('maven.user')
+				password = property('maven.password')
+				close = '1'
+			}
+		}		
+	}
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifact sourceJar
-            artifact javadocJar
+            artifacts = [sourceJar, javadocJar]
             pom.withXml {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
@@ -85,6 +126,6 @@ publishing {
                     }                    
                 }
             }            
-        }
+        }        
     }
 }
