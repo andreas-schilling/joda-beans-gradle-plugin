@@ -22,7 +22,11 @@ import java.util.List;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.SourceSetContainer;
 import org.kiirun.joda.beans.gradle.JodaBeansExtension;
+
 
 /**
  * Abstract base class for both {@code validate} and {@code generate} tasks.
@@ -31,6 +35,8 @@ import org.kiirun.joda.beans.gradle.JodaBeansExtension;
  *
  */
 public abstract class AbstractJodaBeansTask extends DefaultTask {
+	private static final String SOURCE_SETS_PROPERTY = "sourceSets";
+
 	private static final String JODA_BEANS_CODE_GEN_CLASS = "org.joda.beans.gen.BeanCodeGen";
 
 	private static final String DEFAULT_INDENT = "4";
@@ -47,15 +53,34 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 	}
 
 	protected String getSourceDir() {
-		final String sourceDir = ((JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID))
+		String sourceDir = ((JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID))
 				.getSourceDir();
+		if (sourceDir == null) {
+			sourceDir = tryFindSourceSetPath(SourceSet.MAIN_SOURCE_SET_NAME);
+		}
 		return sourceDir != null ? sourceDir : DEFAULT_STRING_VALUE;
 	}
 
 	protected String getTestSourceDir() {
-		final String testSourceDir = ((JodaBeansExtension) getProject().getExtensions()
+		String testSourceDir = ((JodaBeansExtension) getProject().getExtensions()
 				.getByName(JodaBeansExtension.ID)).getTestSourceDir();
+		if (testSourceDir == null) {
+			testSourceDir = tryFindSourceSetPath(SourceSet.TEST_SOURCE_SET_NAME);
+		}
 		return testSourceDir != null ? testSourceDir : DEFAULT_STRING_VALUE;
+	}
+
+	private String tryFindSourceSetPath(final String sourceSetName) {
+		try {
+			if (getProject().getPlugins().findPlugin(JavaPlugin.class) != null) {
+				final SourceSetContainer sourceSets = (SourceSetContainer) getProject().getProperties().get(SOURCE_SETS_PROPERTY);
+				if (sourceSets != null) {
+					return sourceSets.getByName(sourceSetName).getJava().getSrcDirTrees().iterator().next().getDir().getAbsolutePath();
+				}
+			}
+		} finally {
+		}
+		return null;
 	}
 
 	protected String getIndent() {
@@ -90,7 +115,7 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 
 	protected void runBeanGenerator() {
 		getLogger().debug("Running JodaBeans " + getExecutionType() + " in directory: " + getSourceDir()
-		+ (getTestSourceDir().isEmpty() ? "" : ", test directory:" + getTestSourceDir()));
+				+ (getTestSourceDir().isEmpty() ? "" : ", test directory:" + getTestSourceDir()));
 
 		final ClassLoader classLoader = obtainClassLoader();
 		Class<?> toolClass = null;
