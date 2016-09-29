@@ -1,40 +1,131 @@
-apply plugin: 'eclipse'
-apply plugin: 'java'
+plugins {
+	id 'eclipse'
+	id 'java'
+	id 'maven'
+	id 'maven-publish'
+	id 'com.jfrog.bintray' version '1.7.1'
+}
 
 sourceCompatibility = 1.7
 
-group = 'org.joda'
-version = '1.0.1'
+group = 'org.kiirun'
+version = '1.0.2'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Joda-Beans Gradle Plugin', 'Implementation-Version': version
+        attributes	'Implementation-Title': 'Joda-Beans Gradle Plugin',
+        			'Implementation-Version': version,
+        			'Implementation-Vendor': 'kiirun.org',
+        			'Implementation-Vendor-Id': 'org.kiirun',
+        			'Built-By': 'Andreas Schilling',
+        			'Specification-Title': 'Joda-Beans Gradle Plugin',
+        			'Specification-Vendor': 'kiirun.org',
+        			'Built-With': "gradle-${project.getGradle().getGradleVersion()}"
     }
 }
 
-apply plugin: 'maven'
-
 repositories {
     mavenCentral()
+	jcenter()
 }
 
 dependencies {
     compile gradleApi()
-    testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
-test {
-    systemProperties 'property': 'value'
+task sourceJar(type: Jar) {
+  from sourceSets.main.allJava
+  classifier "sources"
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+task javadocJar (type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+	classifier "javadoc"
 }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: uri('../repo'))
-        }
+artifacts {
+	archives jar
+	archives sourceJar
+	archives javadocJar
+}
+
+bintray {
+	user = property('bintray.user')
+	key = property('bintray.key')
+	publications = ['mavenJava']
+	dryRun = true
+	pkg {
+		repo = 'generic'
+		name = project.name
+		licenses = ['Apache-2.0']
+		vcsUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin.git'
+		issueTrackerUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin/issues'
+		publicDownloadNumbers = true
+		githubRepo = 'andreas-schilling/joda-beans-gradle-plugin'
+		githubReleaseNotesFile = 'README.md'
+		version {
+			name = version
+			desc = 'Joda-Beans Gradle Plugin'
+			released  = new Date()
+			vcsTag = version
+			gpg {
+				sign = true
+			}
+			mavenCentralSync {
+				sync = true
+				user = property('maven.user')
+				password = property('maven.password')
+				close = '1'
+			}
+		}		
+	}
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifacts = [sourceJar, javadocJar]
+            pom.withXml {
+                asNode().children().last() + {
+                    resolveStrategy = Closure.DELEGATE_FIRST
+                    name 'Joda-Beans Gradle Plugin'
+                    description 'Gradle plugin for Joda-Beans'
+                    url 'https://github.com/andreas-schilling/joda-beans-gradle-plugin'
+                    inceptionYear '2014'
+                    issueManagement {
+                    	system 'GitHub'
+                    	url 'https://github.com/andreas-schilling/joda-beans-gradle-plugin/issues'
+                    }
+                    scm {
+                        url 'https://github.com/andreas-schilling/joda-beans-gradle-plugin'
+                        connection 'scm:git:https://github.com/andreas-schilling/joda-beans-gradle-plugin.git'
+                        developerConnection 'scm:git:git@github.com:andreas-schilling/joda-beans-gradle-plugin.git'
+                    }
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/license/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id 'andreas-schilling'
+                            name 'Andreas Schilling'
+                            email 'andreas@kiirun.org'
+                            roles {
+                            	role 'Project Lead'
+                            }
+                            timezone 1
+                        }
+                    }
+                    organization {
+                    	name 'kiirun.org'
+                    	url 'http://www.kiirun.org'
+                    }                    
+                }
+            }            
+        }        
     }
 }
