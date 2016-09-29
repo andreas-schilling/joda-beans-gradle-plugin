@@ -58,18 +58,20 @@ apply plugin: 'joda-beans'
 
 #### Configuration
 
-Only the path to the files to process actually is necessary, anything else can be left to
-the defaults.
+If your project is in default maven layout and you're fine with the default configuration of
+this plugin, no configuration is needed at all.
 
-If you do need to configure the plugin, your properties might look like this:
+If you want to customize the settings, your properties might look like this:
 
 ```
 jodabeans {
-    sourceDir = file('src/main/java') // the only mandatory property
-    indent = 4 // this is the default
+    sourceDir = file('src/main/java') // this default is autodetected from your sourceSet definition
+    indent = 4                        // this is the default
     verbose = 2
     prefix = "_"
-    recursive = true // this is the default
-    strict = true
+    recursive = true                  // this is the default
+    strict = false                    // this is the default
 }
 ```
+
+The `strict` mode fails the validation step if files have been changed and a new generate step is needed.
