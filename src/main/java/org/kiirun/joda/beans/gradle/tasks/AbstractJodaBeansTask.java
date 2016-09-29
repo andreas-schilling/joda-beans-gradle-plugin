@@ -53,8 +53,7 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 	}
 
 	protected String getSourceDir() {
-		String sourceDir = ((JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID))
-				.getSourceDir();
+		String sourceDir = getPluginConfiguration().getSourceDir();
 		if (sourceDir == null) {
 			sourceDir = tryFindSourceSetPath(SourceSet.MAIN_SOURCE_SET_NAME);
 		}
@@ -62,8 +61,7 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 	}
 
 	protected String getTestSourceDir() {
-		String testSourceDir = ((JodaBeansExtension) getProject().getExtensions()
-				.getByName(JodaBeansExtension.ID)).getTestSourceDir();
+		String testSourceDir = getPluginConfiguration().getTestSourceDir();
 		if (testSourceDir == null) {
 			testSourceDir = tryFindSourceSetPath(SourceSet.TEST_SOURCE_SET_NAME);
 		}
@@ -84,31 +82,31 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 	}
 
 	protected String getIndent() {
-		final String indent = ((JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID))
-				.getIndent();
+		final String indent = getPluginConfiguration().getIndent();
 		return indent != null ? indent : DEFAULT_INDENT;
 	}
 
 	protected String getPrefix() {
-		final String prefix = ((JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID))
-				.getPrefix();
+		final String prefix = getPluginConfiguration().getPrefix();
 		return prefix != null ? prefix : DEFAULT_STRING_VALUE;
 	}
 
 	protected Integer getVerbose() {
-		return ((JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID)).getVerbose();
+		return getPluginConfiguration().getVerbose();
 	}
 
 	protected boolean operateRecursive() {
-		final Boolean recursive = ((JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID))
-				.getRecursive();
+		final Boolean recursive = getPluginConfiguration().getRecursive();
 		return recursive != null ? recursive : true;
 	}
 
 	protected boolean isStrict() {
-		final Boolean strict = ((JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID))
-				.isStrict();
+		final Boolean strict = getPluginConfiguration().isStrict();
 		return strict != null ? strict : DEFAULT_STRICT_VALUE;
+	}
+
+	private JodaBeansExtension getPluginConfiguration() {
+		return (JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID);
 	}
 
 	protected abstract String getExecutionType();
@@ -166,7 +164,7 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 	protected int runTool(final Class<?> toolClass, final List<String> argsList) {
 		final String sourceDir = getSourceDir();
 		if (sourceDir.isEmpty()) {
-			throw new GradleException("Source directory must be given!");
+			throw new GradleException("Source directory must be given and none could be autodetected!");
 		}
 		argsList.add(sourceDir);
 		int count = invoke(toolClass, argsList);
@@ -195,7 +193,7 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 		} catch (final IllegalAccessException ex) {
 			throw new GradleException("Error invoking BeanCodeGen.createFromArgs()");
 		} catch (final InvocationTargetException ex) {
-			throw new GradleException("Invalid Joda-Beans Mojo configuration: " + ex.getCause().getMessage(),
+			throw new GradleException("Invalid Joda-Beans configuration: " + ex.getCause().getMessage(),
 					ex.getCause());
 		}
 	}
