@@ -66,16 +66,8 @@ bintray {
 		version {
 			name = version
 			desc = 'Joda-Beans Gradle Plugin'
-			released  = new Date()
-			vcsTag = version
 			gpg {
 				sign = true
-			}
-			mavenCentralSync {
-				sync = true
-				user = property('maven.user')
-				password = property('maven.password')
-				close = '1'
 			}
 		}		
 	}
@@ -85,7 +77,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifacts = [sourceJar, javadocJar]
+            artifacts = [jar, sourceJar, javadocJar]
             pom.withXml {
                 asNode().children().last() + {
                     resolveStrategy = Closure.DELEGATE_FIRST
