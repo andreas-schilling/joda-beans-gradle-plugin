@@ -53,10 +53,10 @@ bintray {
 	user = property('bintray.user')
 	key = property('bintray.key')
 	publications = ['mavenJava']
-	dryRun = true
+	dryRun = false
 	pkg {
-		repo = 'generic'
-		name = project.name
+		repo = 'maven'
+		name = group + ':' + project.name
 		licenses = ['Apache-2.0']
 		vcsUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin.git'
 		issueTrackerUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin/issues'

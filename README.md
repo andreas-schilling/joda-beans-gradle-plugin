@@ -45,7 +45,7 @@ buildscript {
   dependencies {
       ...
       classpath 'org.joda:joda-beans:1.2'
-      classpath 'org.kiirun:joda-beans-plugin:1.0.2'
+      classpath 'org.kiirun:joda-beans-gradle-plugin:1.0.2'
   }
 }
 ```
