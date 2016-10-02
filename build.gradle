@@ -14,7 +14,7 @@ version = '1.0.2'
 jar {
     manifest {
         attributes	'Implementation-Title': 'Joda-Beans Gradle Plugin',
-        			'Implementation-Version': version,
+        			'Implementation-Version': project.version,
         			'Implementation-Vendor': 'kiirun.org',
         			'Implementation-Vendor-Id': 'org.kiirun',
         			'Built-By': 'Andreas Schilling',
@@ -56,7 +56,7 @@ bintray {
 	dryRun = false
 	pkg {
 		repo = 'maven'
-		name = group + ':' + project.name
+		name = project.group + ':' + project.name
 		licenses = ['Apache-2.0']
 		vcsUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin.git'
 		issueTrackerUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin/issues'
@@ -64,7 +64,7 @@ bintray {
 		githubRepo = 'andreas-schilling/joda-beans-gradle-plugin'
 		githubReleaseNotesFile = 'README.md'
 		version {
-			name = version
+			name = project.version
 			desc = 'Joda-Beans Gradle Plugin'
 			gpg {
 				sign = true
