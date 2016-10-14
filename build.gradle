@@ -3,7 +3,7 @@ plugins {
 	id 'java'
 	id 'maven'
 	id 'maven-publish'
-	id 'com.jfrog.bintray' version '1.7.1'
+	id 'com.jfrog.bintray' version '1.7.2'
 }
 
 sourceCompatibility = 1.7
@@ -112,6 +112,12 @@ publishing {
                             timezone 1
                         }
                     }
+					contributors {
+						contributor {
+							name 'traggatt'
+							url 'https://github.com/traggatt'
+						}
+					}
                     organization {
                     	name 'kiirun.org'
                     	url 'http://www.kiirun.org'
