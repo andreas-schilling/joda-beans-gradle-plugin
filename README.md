@@ -15,7 +15,7 @@ This section outlines the changes required to your gradle build script.
 #### Dependency
 
 The plugin is available from JCenter and Maven Central.
-To use it, declare a buildscript dependency to both the plugin and Joda Beans (any version >= 1.2):
+To use it, declare a buildscript dependency to the plugin and a compile dependency to Joda-Beans (any version >= 1.2):
 
 ```
 buildscript {
@@ -23,9 +23,13 @@ buildscript {
   
   dependencies {
       ...
-      classpath 'org.joda:joda-beans:1.2'
-      classpath 'org.kiirun:joda-beans-gradle-plugin:1.0.2'
+      classpath 'org.kiirun:joda-beans-gradle-plugin:1.0.3'
   }
+}
+
+dependencies {
+    compile 'org.joda:joda-beans:1.2'
+    ...
 }
 ```
 
@@ -52,6 +56,7 @@ either the word "tab", or a number, such as "2" or "4". Default is "4".
 - `verbose` - as per the command line, a number from "0" (quiet) to "3" (verbose).
 - `recursive` - whether the source directory should be parsed recursively. Default is `true`.
 - `strict` - whether the validate task should fail if beans need regenerating. Default is `false`.
+- `config` - the configuration file to use for bean generation. Can be `guava` or `jdk6`, default is `guava`
 
 #### JodaGenerate
 
@@ -75,6 +80,7 @@ jodabeans {
     prefix = "_"
     recursive = true                  // this is the default
     strict = false                    // this is the default
+    config = 'guava'                  // this is the default, can also be 'jdk6'
 }
 ```
 
