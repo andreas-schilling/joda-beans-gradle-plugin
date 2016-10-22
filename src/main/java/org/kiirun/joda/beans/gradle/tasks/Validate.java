@@ -41,8 +41,8 @@ public class Validate extends AbstractJodaBeansTask {
 	}
 
 	@Override
-	protected List<String> buildGeneratorArguments() {
-		final List<String> argsList = super.buildGeneratorArguments();
+	protected List<String> buildGeneratorArguments(final Version jodaBeansVersion) {
+		final List<String> argsList = super.buildGeneratorArguments(jodaBeansVersion);
 		argsList.add("-nowrite");
 		return argsList;
 	}
@@ -58,10 +58,10 @@ public class Validate extends AbstractJodaBeansTask {
 	}
 
 	@Override
-	protected int runTool(final Class<?> toolClass, final List<String> argsList) {
-		// intercepts the call to runTool, failing if in strict mode and files
-		// were updated by the tool
-		final int filesUpdated = super.runTool(toolClass, argsList);
+	protected int runBeanGenerator() {
+		// intercepts the call to runBeanGenerator, failing if in strict mode
+		// and files were updated by the tool
+		final int filesUpdated = super.runBeanGenerator();
 		if (isStrict() && filesUpdated != 0) {
 			throw new GradleException(filesUpdated + " beans need regenerating. See log.");
 		} else {

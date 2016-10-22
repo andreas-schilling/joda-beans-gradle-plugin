@@ -9,7 +9,7 @@ plugins {
 sourceCompatibility = 1.7
 
 group = 'org.kiirun'
-version = '1.0.2'
+version = '1.0.3'
 
 jar {
     manifest {

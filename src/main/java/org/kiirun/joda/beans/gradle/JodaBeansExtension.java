@@ -34,6 +34,8 @@ public class JodaBeansExtension {
 
 	private String indent;
 
+	private String config;
+
 	private Boolean recursive;
 
 	private Boolean strict;
@@ -76,6 +78,14 @@ public class JodaBeansExtension {
 
 	public void setIndent(final String indent) {
 		this.indent = indent;
+	}
+
+	public String getConfig() {
+		return config;
+	}
+
+	public void setConfig(final String config) {
+		this.config = config;
 	}
 
 	public Boolean getRecursive() {
