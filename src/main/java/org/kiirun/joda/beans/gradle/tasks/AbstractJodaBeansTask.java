@@ -42,7 +42,7 @@ import org.kiirun.joda.beans.gradle.JodaBeansExtension;
 public abstract class AbstractJodaBeansTask extends DefaultTask {
 	private static final Version V1_5 = Version.from(Arrays.asList("1", "5"));
 
-	private static final Version V1_9 = Version.from(Arrays.asList("1", "9"));
+	private static final Version V1_8 = Version.from(Arrays.asList("1", "8"));
 
 	private static final String SOURCE_SETS_PROPERTY = "sourceSets";
 
@@ -157,10 +157,10 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 			arguments.add((jodaBeansVersion.isAtLeast(V1_5) ? "-verbose=" : "-v=") + getVerbose());
 		}
 		if (getConfig() != null && !getConfig().isEmpty()) {
-			if (jodaBeansVersion.isAtLeast(V1_9)) {
+			if (jodaBeansVersion.isGreaterThan(V1_8)) {
 				arguments.add("-config=" + getConfig());
 			} else {
-				getLogger().warn("Cannot use -config prior to Joda-Beans " + V1_9
+				getLogger().warn("Cannot use -config with Joda-Beans <= " + V1_8
 						+ ", please adjust your dependency configuration accordingly.\n"
 						+ "Generator will use default of [" + DEFAULT_CONFIG_VALUE + "]");
 			}
@@ -333,6 +333,10 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 
 		public boolean isAtLeast(final Version other) {
 			return this.compareTo(other) >= 0;
+		}
+
+		public boolean isGreaterThan(final Version other) {
+			return this.compareTo(other) > 0;
 		}
 
 		@Override
