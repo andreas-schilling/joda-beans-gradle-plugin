@@ -1,7 +1,7 @@
 Joda-Beans plugin for Gradle
 ----------------------------
 [![Maven Central](https://img.shields.io/maven-central/v/org.kiirun/joda-beans-gradle-plugin.svg)]()
-[![Bintray](https://img.shields.io/bintray/v/andreas-schilling/maven/org.kiirun%3Ajoda-beans-gradle-plugin.svg)]()
+[![Bintray](https://img.shields.io/bintray/v/andreas-schilling/maven/org.kiirun%3Ajoda-beans-gradle-plugin.svg)](https://bintray.com/andreas-schilling/maven/org.kiirun%3Ajoda-beans-gradle-plugin/_latestVersion)
 [![Apache 2.0](https://img.shields.io/github/license/andreas-schilling/joda-beans-gradle-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 This project provides a [Gradle](https://www.gradle.org/) plugin
@@ -28,7 +28,7 @@ buildscript {
 }
 
 dependencies {
-    compile 'org.joda:joda-beans:1.2'
+    compile 'org.joda:joda-beans:1.8'
     ...
 }
 ```
@@ -85,3 +85,7 @@ jodabeans {
 ```
 
 The `strict` mode fails the validation step if files have been changed and a new generate step is needed.
+
+### Example project
+
+You can find a small example of the usage of both this plugin and Joda-Beans in general [here](https://github.com/andreas-schilling/joda-beans-test)
