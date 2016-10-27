@@ -1,7 +1,7 @@
 Joda-Beans plugin for Gradle
 ----------------------------
 [![Maven Central](https://img.shields.io/maven-central/v/org.kiirun/joda-beans-gradle-plugin.svg)]()
-[![Bintray](https://img.shields.io/bintray/v/andreas-schilling/maven/org.kiirun%3Ajoda-beans-gradle-plugin.svg)](https://bintray.com/andreas-schilling/maven/org.kiirun%3Ajoda-beans-gradle-plugin/_latestVersion)
+[![Bintray](https://api.bintray.com/packages/andreas-schilling/maven/org.kiirun%3Ajoda-beans-gradle-plugin/images/download.svg) ](https://bintray.com/andreas-schilling/maven/org.kiirun%3Ajoda-beans-gradle-plugin/_latestVersion)
 [![Apache 2.0](https://img.shields.io/github/license/andreas-schilling/joda-beans-gradle-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 This project provides a [Gradle](https://www.gradle.org/) plugin
