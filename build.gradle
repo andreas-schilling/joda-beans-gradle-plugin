@@ -118,6 +118,10 @@ publishing {
                             name 'traggatt'
                             url 'https://github.com/traggatt'
                         }
+                        contributor {
+                            name 'Sebastian Davids'
+                            url 'https://github.com/sdavids'
+                        }
                     }
                     organization {
                         name 'kiirun.org'

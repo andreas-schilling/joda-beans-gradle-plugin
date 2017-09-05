@@ -15,7 +15,7 @@ This section outlines the changes required to your gradle build script.
 #### Dependency
 
 The plugin is available from JCenter and Maven Central.
-To use it, declare a buildscript dependency to the plugin and a compile dependency to Joda-Beans (any version >= 1.2):
+To use it, declare a buildscript dependency to the plugin and a compile or api dependency to Joda-Beans (any version >= 1.2):
 
 ```
 buildscript {
@@ -23,7 +23,7 @@ buildscript {
   
   dependencies {
       ...
-      classpath 'org.kiirun:joda-beans-gradle-plugin:1.0.3'
+      classpath 'org.kiirun:joda-beans-gradle-plugin:1.0.4'
   }
 }
 
@@ -33,6 +33,7 @@ dependencies {
 }
 ```
 
+Please note, that for versions of the plugin prior to 1.0.3, an explicit buildscript dependency to Joda-Beans is needed.
 Then you can simply use the plugin with:
 
 ```
