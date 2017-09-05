@@ -1,0 +1,31 @@
+apply plugin: '${javaplugin}'
+apply plugin: 'joda-beans'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+dependencies {
+    ${dependencyconfig} 'org.joda:joda-beans:${jodabeansversion}'
+}
+
+jodabeans {
+    verbose = 3
+}
+
+task runGradleTest {
+    dependsOn jodaGenerate
+    doLast {
+        if (!file('src/main/java/Person.java').readLines("UTF-8").find { line -> line.contains("Person.Meta") }) {
+            throw new GradleException("Joda Beans generator task was not executed correctly!")
+        }
+    }
+}

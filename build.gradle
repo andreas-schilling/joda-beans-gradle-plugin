@@ -4,12 +4,13 @@ plugins {
     id 'maven'
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.7.2'
+    id 'org.ysb33r.gradletest' version '1.0-beta12'
 }
 
 sourceCompatibility = 1.7
 
 group = 'org.kiirun'
-version = '1.0.3'
+version = '1.0.4'
 
 jar {
     manifest {
@@ -126,4 +127,53 @@ publishing {
             }
         }
     }
+}
+
+def testDefinition(String target, Map values) {
+    def targetDir = new File(target)
+    targetDir.mkdirs()
+
+    return {
+        from ('src/test/resources') {
+            include '**/*.template'
+            expand values
+            rename '(.*)(\\.template)', '$1'
+        }
+        from('src/test/resources') {
+            exclude '**/*.template'
+        }
+        into target
+    }
+}
+
+task generateTestCases {
+    doFirst {
+        delete 'src/gradleTest'
+    }
+    doLast {
+        def jodaVersions = ["1.8", "1.9", "1.9.1", "1.10", "1.10.1", "1.11", "1.12", "1.13"]
+        for (jodaVersion in jodaVersions) {
+            copy {
+                with testDefinition('src/gradleTest/plainGenerate'+jodaVersion, [javaplugin :'java',
+                                                                     dependencyconfig: 'compile',
+                                                                     jodabeansversion: jodaVersion])
+            }
+            copy {
+                with testDefinition('src/gradleTest/plainGenerateWithLibraryApi'+jodaVersion, [javaplugin: 'java-library',
+                                                                                   dependencyconfig: 'api',
+                                                                                   jodabeansversion: jodaVersion])
+            }
+            copy {
+                with testDefinition('src/gradleTest/plainGenerateWithLibraryImpl'+jodaVersion, [javaplugin: 'java-library',
+                                                                                    dependencyconfig: 'implementation',
+                                                                                    jodabeansversion: jodaVersion])
+            }
+        }
+    }
+}
+gradleTestGenerator.dependsOn generateTestCases
+
+gradleTest {
+    versions '4.1', '4.0.2', '4.0.1', '4.0'
+    versions '3.5.1', '3.5', '3.4.1', '3.4'
 }

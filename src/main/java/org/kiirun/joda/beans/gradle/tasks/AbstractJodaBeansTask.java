@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2016 Andreas Schilling
+ * Copyright 2014-2017 Andreas Schilling
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.gradle.api.DefaultTask;
@@ -31,6 +32,7 @@ import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.util.GradleVersion;
 import org.kiirun.joda.beans.gradle.JodaBeansExtension;
 
 /**
@@ -43,6 +45,8 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 	private static final Version V1_5 = Version.from(Arrays.asList("1", "5"));
 
 	private static final Version V1_8 = Version.from(Arrays.asList("1", "8"));
+
+	private static final Collection<String> CONFIGURATIONS_TO_SEARCH = Arrays.asList("compile", "compileClasspath");
 
 	private static final String SOURCE_SETS_PROPERTY = "sourceSets";
 
@@ -130,9 +134,16 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 	protected abstract String getExecutionType();
 
 	protected int runBeanGenerator() {
+		checkGradleVersion();
 		getLogger().debug("Running JodaBeans " + getExecutionType() + " in directory: " + getSourceDir()
 				+ (getTestSourceDir().isEmpty() ? "" : ", test directory:" + getTestSourceDir()));
 		return new JodaBeansGenerator().run();
+	}
+
+	private void checkGradleVersion() {
+		if (GradleVersion.current().compareTo(GradleVersion.version("3.4")) < 0) {
+			throw new GradleException("This plugin needs at least Gradle version 3.4+.");
+		}
 	}
 
 	/**
@@ -195,14 +206,17 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 		 */
 		private ClassLoader obtainClassLoader() {
 			final List<URL> compileClasspath = new ArrayList<>();
-			final Configuration compileConfig = getProject().getConfigurations().getByName("compile");
-			if (compileConfig != null) {
-				for (final File classpathFile : compileConfig.getFiles()) {
-					try {
-						compileClasspath.add(classpathFile.toURI().toURL());
-					} catch (final MalformedURLException e) {
-						getLogger()
-								.debug("Skipping " + classpathFile.getAbsolutePath() + " from the compile classpath.");
+
+			for (final String configName : CONFIGURATIONS_TO_SEARCH) {
+				final Configuration config = getProject().getConfigurations().findByName(configName);
+				if (config != null && config.isCanBeResolved()) {
+					for (final File classpathFile : config.getFiles()) {
+						try {
+							compileClasspath.add(classpathFile.toURI().toURL());
+						} catch (final MalformedURLException e) {
+							getLogger().debug(
+									"Skipping " + classpathFile.getAbsolutePath() + " from the compile classpath.");
+						}
 					}
 				}
 			}
