@@ -5,12 +5,13 @@ plugins {
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.7.2'
     id 'org.ysb33r.gradletest' version '1.0-beta12'
+    id 'com.gradle.plugin-publish' version '0.9.7' 
 }
 
 sourceCompatibility = 1.7
 
 group = 'org.kiirun'
-version = '1.0.4'
+version = '1.0.5'
 
 jar {
     manifest {
@@ -129,6 +130,20 @@ publishing {
                     }
                 }
             }
+        }
+    }
+}
+
+pluginBundle {
+    website = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin'
+    vcsUrl = 'https://github.com/andreas-schilling/joda-beans-gradle-plugin.git'
+
+    plugins {
+        gradletestPlugin {
+            id = 'org.kiirun.joda-beans'
+            displayName = 'Plugin to run the Joda-Beans code generator'
+            description = 'Runs the Joda-Beans code generator to allow processing your annotated beans within your Gradle build.'
+            tags = ['bean', 'metamodel', 'properties', 'joda-beans']
         }
     }
 }

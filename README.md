@@ -10,12 +10,40 @@ This is basically a copy of the [Joda-Beans Maven Plugin](https://github.com/Jod
 
 ### Usage in your gradle build
 
-This section outlines the changes required to your gradle build script.
-
-#### Dependency
-
 The plugin is available from JCenter and Maven Central.
-To use it, declare a buildscript dependency to the plugin and a compile or api dependency to Joda-Beans (any version >= 1.2):
+From version 1.0.4 on this plugin only works with Gradle versions >= 3.4
+You need a compile or api dependency to Joda-Beans (any version >= 1.2) for your project.
+If you're using versions of the plugin prior to 1.0.3, an explicit buildscript dependency to Joda-Beans is needed.
+
+#### Dependency for versions from 1.0.5
+
+From version 1.0.5 onwards the ID of the plugin has changed to `org.kiirun.joda-beans` and it is also available
+through the Gradle plugin portal. Thus, the new convenient dependency mechanism can be used:
+
+```
+plugins {
+    id 'org.kiirun.joda-beans' version '1.0.5'
+}
+```
+
+The old way still works as well:
+
+```
+buildscript {
+  ...
+  
+  dependencies {
+      ...
+      classpath 'org.kiirun:joda-beans-gradle-plugin:1.0.5'
+  }
+}
+
+apply plugin: 'org.kiirun.joda-beans'
+```
+
+#### Dependency for versions up to 1.0.4
+
+To use the plugin, declare a buildscript dependency to the plugin:
 
 ```
 buildscript {
@@ -33,7 +61,7 @@ dependencies {
 }
 ```
 
-Please note, that for versions of the plugin prior to 1.0.3, an explicit buildscript dependency to Joda-Beans is needed.
+
 Then you can simply use the plugin with:
 
 ```
