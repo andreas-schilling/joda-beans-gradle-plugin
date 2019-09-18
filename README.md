@@ -22,7 +22,7 @@ through the Gradle plugin portal. Thus, the new convenient dependency mechanism 
 
 ```
 plugins {
-    id 'org.kiirun.joda-beans' version '1.0.5'
+    id 'org.kiirun.joda-beans' version '1.1.0'
 }
 ```
 
@@ -34,7 +34,7 @@ buildscript {
   
   dependencies {
       ...
-      classpath 'org.kiirun:joda-beans-gradle-plugin:1.0.5'
+      classpath 'org.kiirun:joda-beans-gradle-plugin:1.1.0'
   }
 }
 
@@ -86,6 +86,7 @@ either the word "tab", or a number, such as "2" or "4". Default is "4".
 - `recursive` - whether the source directory should be parsed recursively. Default is `true`.
 - `strict` - whether the validate task should fail if beans need regenerating. Default is `false`.
 - `config` - the configuration file to use for bean generation. Can be `guava` or `jdk6`, default is `guava`
+- `generated` - whether a `@Generated` annotation should be added to generated code, default is `false` (requires Joda-Beans `2.7.1+`) 
 
 #### JodaGenerate
 
@@ -110,6 +111,7 @@ jodabeans {
     recursive = true                  // this is the default
     strict = false                    // this is the default
     config = 'guava'                  // this is the default, can also be 'jdk6'
+    generated = false                 // this is the default
 }
 ```
 
