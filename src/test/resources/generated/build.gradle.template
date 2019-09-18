@@ -26,8 +26,8 @@ task runGradleTest {
     dependsOn jodaGenerate
     doLast {
         def allLines = file('src/main/java/Person.java').readLines("UTF-8")
-        def generatedAsExpected = ${generatedShouldBeThere} == allLines.find { line -> line.contains("@Generated") }
-        if (!allLines.find { line -> line.contains("Person.Meta") } || !generatedAsExpected) {
+        def generatedAsExpected = ${generatedShouldBeThere} == (allLines.find { line -> line.contains("@Generated") } != null)
+        if (!generatedAsExpected) {
             throw new GradleException("Joda Beans generator task was not executed correctly!")
         }
     }
