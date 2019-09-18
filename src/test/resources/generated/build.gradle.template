@@ -1,0 +1,34 @@
+apply plugin: '${javaplugin}'
+apply plugin: 'org.kiirun.joda-beans'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+dependencies {
+    ${dependencyconfig} 'org.joda:joda-beans:${jodabeansversion}'
+}
+
+jodabeans {
+    verbose = 3
+    generated = true
+}
+
+task runGradleTest {
+    dependsOn jodaGenerate
+    doLast {
+        def allLines = file('src/main/java/Person.java').readLines("UTF-8")
+        def generatedAsExpected = ${generatedShouldBeThere} == allLines.find { line -> line.contains("@Generated") }
+        if (!allLines.find { line -> line.contains("Person.Meta") } || !generatedAsExpected) {
+            throw new GradleException("Joda Beans generator task was not executed correctly!")
+        }
+    }
+}

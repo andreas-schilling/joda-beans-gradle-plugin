@@ -4,14 +4,14 @@ plugins {
     id 'maven'
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.7.2'
-    id 'org.ysb33r.gradletest' version '1.0-beta12'
+    id 'org.ysb33r.gradletest' version '2.0-rc.4'
     id 'com.gradle.plugin-publish' version '0.9.7' 
 }
 
 sourceCompatibility = 1.7
 
 group = 'org.kiirun'
-version = '1.0.5'
+version = '1.1.0'
 
 jar {
     manifest {
@@ -52,8 +52,8 @@ artifacts {
 }
 
 bintray {
-    user = property('bintray.user')
-    key = property('bintray.key')
+    user = hasProperty('bintray.user') ? property('bintray.user') : ""
+    key = hasProperty('bintray.key') ? property('bintray.key') : ""
     publications = ['mavenJava']
     dryRun = false
     pkg {
@@ -148,17 +148,17 @@ pluginBundle {
     }
 }
 
-def testDefinition(String target, Map values) {
+def testDefinition(String testCase, String target, Map values) {
     def targetDir = new File(target)
     targetDir.mkdirs()
 
     return {
-        from ('src/test/resources') {
+        from ("src/test/resources/${testCase}") {
             include '**/*.template'
             expand values
             rename '(.*)(\\.template)', '$1'
         }
-        from('src/test/resources') {
+        from("src/test/resources/${testCase}") {
             exclude '**/*.template'
         }
         into target
@@ -170,22 +170,45 @@ task generateTestCases {
         delete 'src/gradleTest'
     }
     doLast {
-        def jodaVersions = ["1.8", "1.9", "1.9.1", "1.10", "1.10.1", "1.11", "1.12", "1.13"]
+        def jodaVersions = ["1.8", "1.9", "1.9.1", "1.10", "1.10.1", "1.11", "1.12", "1.13", "1.14",
+                            "2.0", "2.0.1", "2.0.2", "2.1", "2.2", "2.2.1", "2.2.2", "2.3", "2.4.0",
+                            "2.5.0", "2.6.0", "2.6.1", "2.6.2", "2.7.0", "2.7.1"]
         for (jodaVersion in jodaVersions) {
             copy {
-                with testDefinition('src/gradleTest/plainGenerate'+jodaVersion, [javaplugin :'java',
+                with testDefinition('standard', 'src/gradleTest/plainGenerate'+jodaVersion, [javaplugin :'java',
                                                                      dependencyconfig: 'compile',
                                                                      jodabeansversion: jodaVersion])
             }
             copy {
-                with testDefinition('src/gradleTest/plainGenerateWithLibraryApi'+jodaVersion, [javaplugin: 'java-library',
+                with testDefinition('standard', 'src/gradleTest/plainGenerateWithLibraryApi'+jodaVersion, [javaplugin: 'java-library',
                                                                                    dependencyconfig: 'api',
                                                                                    jodabeansversion: jodaVersion])
             }
             copy {
-                with testDefinition('src/gradleTest/plainGenerateWithLibraryImpl'+jodaVersion, [javaplugin: 'java-library',
+                with testDefinition('standard', 'src/gradleTest/plainGenerateWithLibraryImpl'+jodaVersion, [javaplugin: 'java-library',
                                                                                     dependencyconfig: 'implementation',
                                                                                     jodabeansversion: jodaVersion])
+            }
+        }
+
+        def jodaVersionsWithoutGenerated = ["1.8", "1.9", "1.9.1", "1.10", "1.10.1", "1.11", "1.12", "1.13", "1.14",
+                            "2.0", "2.0.1", "2.0.2", "2.1", "2.2", "2.2.1", "2.2.2", "2.3", "2.4.0",
+                            "2.5.0", "2.6.0", "2.6.1", "2.6.2", "2.7.0", "2.7.1"]
+        def jodaVersionsWithGenerated = ["2.7.1"]
+        for (jodaVersion in jodaVersionsWithoutGenerated) {
+            copy {
+                with testDefinition('generated', 'src/gradleTest/generatedFlag'+jodaVersion, [javaplugin: 'java-library',
+                                                                                              generatedShouldBeThere: 'false',
+                                                                                              dependencyconfig: 'implementation',
+                                                                                              jodabeansversion: jodaVersion])
+            }
+        }
+        for (jodaVersion in jodaVersionsWithGenerated) {
+            copy {
+                with testDefinition('generated', 'src/gradleTest/generatedFlag'+jodaVersion, [javaplugin: 'java-library',
+                                                                                              generatedShouldBeThere: 'true',
+                                                                                              dependencyconfig: 'implementation',
+                                                                                              jodabeansversion: jodaVersion])
             }
         }
     }

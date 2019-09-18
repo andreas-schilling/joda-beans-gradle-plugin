@@ -1,5 +1,5 @@
 apply plugin: '${javaplugin}'
-apply plugin: 'joda-beans'
+apply plugin: 'org.kiirun.joda-beans'
 
 repositories {
     mavenCentral()

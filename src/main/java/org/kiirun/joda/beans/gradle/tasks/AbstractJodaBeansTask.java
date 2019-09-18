@@ -1,12 +1,12 @@
 /**
- * Copyright 2014-2017 Andreas Schilling
- *
+ * Copyright 2014-2019 Andreas Schilling
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 package org.kiirun.joda.beans.gradle.tasks;
+
+import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.util.GradleVersion;
+import org.kiirun.joda.beans.gradle.JodaBeansExtension;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -26,15 +35,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.gradle.api.DefaultTask;
-import org.gradle.api.GradleException;
-import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.api.tasks.SourceSet;
-import org.gradle.api.tasks.SourceSetContainer;
-import org.gradle.util.GradleVersion;
-import org.kiirun.joda.beans.gradle.JodaBeansExtension;
-
 /**
  * Abstract base class for both {@code validate} and {@code generate} tasks.
  *
@@ -45,6 +45,8 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 	private static final Version V1_5 = Version.from(Arrays.asList("1", "5"));
 
 	private static final Version V1_8 = Version.from(Arrays.asList("1", "8"));
+
+	private static final Version V2_7_1 = Version.from(Arrays.asList("2", "7", "1"));
 
 	private static final Collection<String> CONFIGURATIONS_TO_SEARCH = Arrays.asList("compile", "compileClasspath");
 
@@ -127,6 +129,10 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 		return strict != null ? strict : DEFAULT_STRICT_VALUE;
 	}
 
+	protected Boolean getGenerated() {
+		return getPluginConfiguration().getGenerated();
+	}
+
 	private JodaBeansExtension getPluginConfiguration() {
 		return (JodaBeansExtension) getProject().getExtensions().getByName(JodaBeansExtension.ID);
 	}
@@ -174,6 +180,16 @@ public abstract class AbstractJodaBeansTask extends DefaultTask {
 				getLogger().warn("Cannot use -config with Joda-Beans <= " + V1_8
 						+ ", please adjust your dependency configuration accordingly.\n"
 						+ "Generator will use default of [" + DEFAULT_CONFIG_VALUE + "]");
+			}
+		}
+		if (getGenerated() != null) {
+			if (jodaBeansVersion.isAtLeast(V2_7_1)) {
+				if (Boolean.TRUE.equals(getGenerated())) {
+					arguments.add("-generated");
+				}
+			} else {
+				getLogger().warn("Cannot use -generated with Joda-Beans < " + V2_7_1
+						+ ", please adjust your dependency configuration accordingly.\n");
 			}
 		}
 		return arguments;

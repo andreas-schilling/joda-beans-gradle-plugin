@@ -1,5 +1,5 @@
 /**
- * Copyright 2014-2017 Andreas Schilling
+ * Copyright 2014-2019 Andreas Schilling
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ public class JodaBeansExtension {
 	private Boolean recursive;
 
 	private Boolean strict;
+
+	private Boolean generated;
 
 	public String getSourceDir() {
 		return sourceDir;
@@ -102,5 +104,13 @@ public class JodaBeansExtension {
 
 	public void setStrict(final Boolean strict) {
 		this.strict = strict;
+	}
+
+	public Boolean getGenerated() {
+		return generated;
+	}
+
+	public void setGenerated(Boolean generated) {
+		this.generated = generated;
 	}
 }
